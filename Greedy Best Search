@@ -1,0 +1,46 @@
+#Greedy Best Search with python
+
+graph={
+    's':[('a',1),('b',4)],
+    'a':[('b',2),('c',5),('g',12)],
+    'b':[('c',2)],
+    'c':[('g',3)],
+
+}
+h_table={
+    's': 7,
+    'a':6,
+    'b':4,
+    'c':2,
+    'g':0
+
+}
+# helper function
+def path_h_cost(path):
+    g_cost=0
+    for(node,cost) in path:
+        g_cost += cost
+        last_node=path[-1][0]
+    h_cost=h_table[last_node]
+    return h_cost,last_node
+def greedy_best_search(graph,start,goal):
+    visited=[]
+    queue=[[(start,0)]]
+    while queue:
+        queue.sort(key=path_h_cost)
+        path = queue.pop(0)
+        node = path[-1][0]
+        if node in visited:
+            continue
+        visited.append(node)
+        if node == goal:
+            return path
+        else:
+            adjacent_node = graph.get(node, [])
+            for (node2, cost) in adjacent_node:
+                new_path = path.copy()
+                new_path.append((node2, cost))
+                queue.append(new_path)
+solution = greedy_best_search(graph, 's', 'g')
+print("solution is  :", solution)
+print("cost is ", path_h_cost(solution)[0])
